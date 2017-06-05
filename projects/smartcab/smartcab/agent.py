@@ -95,8 +95,10 @@ class LearningAgent(Agent):
 
         stateActions = self.Q[state]
 
+        max_action = max(stateActions, key=stateActions.get)
+        max_Q = stateActions[max_action]
 
-        return stateActions[max(stateActions, key=stateActions.get)]
+        return max_action, max_Q
 
 
     def createQ(self, state):
@@ -135,8 +137,7 @@ class LearningAgent(Agent):
                 action = random.choice(self.valid_actions)
             else:
                 #return action with maximum reward
-                stateActions = self.Q[state]
-                action = max(stateActions, key=stateActions.get)
+                action, _ = self.get_maxQ(state)
         else:
             #I'm not learning...
             action = random.choice(self.valid_actions)
@@ -155,7 +156,7 @@ class LearningAgent(Agent):
         if self.learning:
             stateAction = self.Q[state]
             oldQ = stateAction[action]
-            maxQ = self.get_maxQ(state)
+            _ , maxQ = self.get_maxQ(state)
             stateAction[action] = oldQ + self.alpha * (reward + maxQ - oldQ)
 
         return
